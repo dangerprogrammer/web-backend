@@ -3,28 +3,27 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { User } from "src/entities";
-import { SearchService } from "./search.service";
 
 @Injectable()
 export class AuthService {
     constructor(
         @Inject(JwtService) private readonly jwt: JwtService,
-        // @InjectRepository(User) private readonly userRepo: Repository<User>
+        @InjectRepository(User) private readonly userRepo: Repository<User>
     ) {}
 
     async signup(signupDto: Partial<User>) {
         const tokens = await this.getTokens(signupDto);
 
-        // const user = this.userRepo.create({
-        //     ...signupDto,
-        //     ...tokens
-        // });
+        const user = this.userRepo.create({
+            ...signupDto,
+            ...tokens
+        });
 
-        // await this.userRepo.save(user);
+        await this.userRepo.save(user);
 
-        // console.log(user);
+        console.log(user);
 
-        // return await this.userRepo.findOneBy({ email: user.email });
+        return await this.userRepo.findOneBy({ email: user.email });
     }
 
     private async getTokens(signupDto: Partial<User>) {

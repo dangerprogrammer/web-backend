@@ -1,0 +1,1 @@
+export type Category = "componentes" | "eletronicos" | "computadores" | "celulares" | "equip. som";

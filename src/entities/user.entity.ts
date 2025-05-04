@@ -1,7 +1,10 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({ name: 'users' })
 export class User {
+    @Column()
+    name: string;
+
     @PrimaryColumn()
     email: string;
 
@@ -11,4 +14,13 @@ export class User {
 
     @Column()
     hashRefreshToken?: string;
+
+    @Column()
+    location: string;
+
+    @CreateDateColumn()
+    joinedAt: Date;
+
+    @Column()
+    phone: string;
 }

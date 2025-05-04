@@ -1,0 +1,1 @@
+export type Condition = "usado-bom" | "usado-regular" | "defeito";

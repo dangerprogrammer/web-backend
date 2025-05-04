@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AuthService, SearchService } from './services';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { EntityModule } from './entities/entity.module';
 
 @Module({
   imports: [
