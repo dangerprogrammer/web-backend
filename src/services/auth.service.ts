@@ -39,8 +39,8 @@ export class AuthService {
         ]);
 
         return {
-            access_token,
-            refresh_token
+            hash: access_token,
+            hashRefreshToken: refresh_token
         };
     }
 }

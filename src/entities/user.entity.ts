@@ -1,3 +1,4 @@
+import { UserTrade } from "src/types";
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({ name: 'users' })
@@ -20,6 +21,9 @@ export class User {
 
     @CreateDateColumn()
     joinedAt: Date;
+
+    @Column()
+    userType: UserTrade;
 
     @Column()
     phone: string;
