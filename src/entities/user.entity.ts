@@ -1,8 +1,11 @@
 import { UserTrade } from "src/types";
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'users' })
 export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
+
     @Column()
     name: string;
 
@@ -13,7 +16,7 @@ export class User {
     @Column()
     hash: string;
 
-    @Column()
+    @Column({ nullable: !0 })
     hashRefreshToken?: string;
 
     @Column()

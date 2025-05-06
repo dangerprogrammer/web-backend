@@ -10,8 +10,20 @@ export class AppController {
   ) {}
 
   @Post('sign-up')
-  signUp(@Body() signupDto: User) {
+  signUp(@Body() signupDto: { email: string, password: string }) {
     return this.auth.signup(signupDto);
+  }
+
+  @Post('signin')
+  signin(@Body() signinDto: { email: string, password: string }) {
+    return this.auth.signin(signinDto);
+  }
+
+  @Get('users')
+  async getUserByEmail(@Query('email') email: string) {
+    const user = await this.search.searchUser(email);
+
+    return user || {};
   }
 
   @Get('products')
