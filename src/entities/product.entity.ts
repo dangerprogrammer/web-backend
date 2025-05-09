@@ -15,8 +15,8 @@ export class Product {
     @Column()
     image: string;
 
-    @Column("text", { array: !0 })
-    categories: Category[];
+    @Column()
+    category: Category;
 
     @Column()
     condition: Condition;
@@ -25,5 +25,8 @@ export class Product {
     location: string;
 
     @Column()
-    requiredPoints: number;
+    estimatedPrice: number;
+
+    @Column()
+    points: number;
 }
