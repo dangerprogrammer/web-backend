@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Inject, Post, Query } from '@nestjs/common';
 import { AuthService, SearchService } from './services';
-import { User } from './entities';
+import { Product, User } from './entities';
 
 @Controller()
 export class AppController {
@@ -35,4 +35,14 @@ export class AppController {
   getProductById(@Query('id') id: string) {
     return this.search.searchProduct(+id);
   }
+
+  @Post('product')
+  createProduct(@Headers('authorization') auth: string, @Body() productDto: Partial<Product>) {
+    return this.auth.createProduct(auth, productDto);
+  }
+
+  @Get('search-token')
+    findUserByToken(@Headers('authorization') auth: string) {
+        return this.search.findUserByToken(auth);
+    }
 }

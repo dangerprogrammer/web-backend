@@ -12,8 +12,8 @@ export class Product {
     @Column()
     desc: string;
 
-    @Column()
-    image: string;
+    @Column("text", { array: !0 })
+    images: string[];
 
     @Column()
     category: Category;

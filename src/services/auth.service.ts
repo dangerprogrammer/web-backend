@@ -1,15 +1,18 @@
-import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
+import { ForbiddenException, forwardRef, Inject, Injectable } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
-import { User } from "src/entities";
+import { Product, User } from "src/entities";
 import * as bcrypt from 'bcrypt';
+import { SearchService } from "./search.service";
 
 @Injectable()
 export class AuthService {
     constructor(
         @Inject(JwtService) private readonly jwt: JwtService,
-        @InjectRepository(User) private readonly userRepo: Repository<User>
+        @InjectRepository(User) private readonly userRepo: Repository<User>,
+        @InjectRepository(Product) private readonly productRepo: Repository<Product>,
+        @Inject(forwardRef(() => SearchService)) private readonly search: SearchService
     ) { }
 
     async signup(signupDto: { email: string, password: string }) {
@@ -42,6 +45,18 @@ export class AuthService {
         await this.updateRtHash(user.id, tokens.hashRefreshToken);
 
         return tokens;
+    }
+
+    async createProduct(auth: string, productDto: Partial<Product>) {
+        const user = await this.search.findUserByToken(auth);
+
+        if (!user) throw new ForbiddenException("Unauthorized user");
+
+        const product = this.productRepo.create(productDto);
+
+        await this.productRepo.save(product);
+
+        return product;
     }
 
     private async updateRtHash(id: number, rt: string) {

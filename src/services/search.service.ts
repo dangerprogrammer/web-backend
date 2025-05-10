@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { Product, User } from "src/entities";
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class SearchService {
@@ -24,5 +25,12 @@ export class SearchService {
         console.log(`Buscando o produto ${id}`);
         
         return await this.productRepo.findOneBy({ id });
+    }
+
+    async findUserByToken(auth: string) {
+        const token = auth.split(' ')[1];
+        const { sub: id } = jwt.verify(token, 'at-secret') as any;
+
+        return await this.userRepo.findOneBy({ id });
     }
 }
