@@ -1,1 +1,1 @@
-export type Condition = "usado-bom" | "usado-regular" | "defeito";
+export type Condition = "novo" | "usado-bom" | "usado-regular" | "defeito";

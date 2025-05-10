@@ -1,13 +1,16 @@
-import { Body, Controller, Get, Headers, Inject, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Inject, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AuthService, SearchService } from './services';
-import { Product, User } from './entities';
+import { Product } from './entities';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller()
 export class AppController {
   constructor(
     @Inject(AuthService) private readonly auth: AuthService,
     @Inject(SearchService) private readonly search: SearchService
-  ) {}
+  ) { }
 
   @Post('sign-up')
   signUp(@Body() signupDto: { email: string, password: string }) {
@@ -37,12 +40,31 @@ export class AppController {
   }
 
   @Post('product')
-  createProduct(@Headers('authorization') auth: string, @Body() productDto: Partial<Product>) {
-    return this.auth.createProduct(auth, productDto);
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'images', maxCount: 8 },
+  ], {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, uniqueName + extname(file.originalname));
+      },
+    }),
+  }))
+  async createProduct(
+    @UploadedFiles() files: { images?: Express.Multer.File[] },
+    @Headers('authorization') auth: string,
+    @Body() body: any
+  ) {
+    const imagePaths = files.images?.map(file => `/uploads/${file.filename}`) || [];
+
+    const productDto = { ...body, images: imagePaths };
+
+    return await this.auth.createProduct(auth, productDto);
   }
 
   @Get('search-token')
-    findUserByToken(@Headers('authorization') auth: string) {
-        return this.search.findUserByToken(auth);
-    }
+  async findUserByToken(@Headers('authorization') auth: string) {
+    return await this.search.findUserByToken(auth) || {};
+  }
 }

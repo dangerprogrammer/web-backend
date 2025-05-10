@@ -30,4 +30,7 @@ export class User {
 
     @Column()
     phone: string;
+
+    @Column({ default: 0 })
+    totalPoints: number;
 }
