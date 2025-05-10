@@ -34,7 +34,7 @@ export class AppController {
     return this.search.searchAllProducts();
   }
 
-  @Get('products')
+  @Get('products/product')
   getProductById(@Query('id') id: string) {
     return this.search.searchProduct(+id);
   }

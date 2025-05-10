@@ -22,8 +22,6 @@ export class SearchService {
     }
 
     async searchProduct(id: number) {
-        console.log(`Buscando o produto ${id}`);
-        
         return await this.productRepo.findOneBy({ id });
     }
 
