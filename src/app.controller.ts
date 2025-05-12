@@ -46,6 +46,11 @@ export class AppController {
     return this.search.searchProduct(+id);
   }
 
+  @Get('user-interest')
+  setUserInterestedProducts(@Headers('authorization') auth: string, @Query('id') id: string) {
+    return this.auth.updateInterest(auth, +id);
+  }
+
   @Post('product')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'images', maxCount: 8 },

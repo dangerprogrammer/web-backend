@@ -61,7 +61,32 @@ export class AuthService {
 
         await this.productRepo.save(product);
 
+        user.totalPoints += productDto.points;
+
+        await this.userRepo.save(user);
+
         return product;
+    }
+
+    async updateInterest(auth: string, id: number) {
+        const user = await this.search.findUserByToken(auth);
+
+        if (!user) throw new ForbiddenException("Unauthorized user");
+
+        const product = await this.search.searchProduct(id);
+
+        if (!product) throw new ForbiddenException("Unknown Product");
+
+        const fullUser = (await this.userRepo.findOne({
+            where: { id: user.id },
+            relations: ['interestedProducts']
+        }))!;
+        const productIndex = fullUser.interestedProducts.findIndex(p => p.id == product.id);
+
+        if (productIndex == -1) fullUser.interestedProducts.push(product);
+        else fullUser.interestedProducts = fullUser.interestedProducts.filter(p => p.id != product.id);
+
+        return await this.userRepo.save(fullUser);
     }
 
     private async updateRtHash(id: number, rt: string) {
