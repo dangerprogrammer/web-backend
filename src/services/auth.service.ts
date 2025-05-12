@@ -61,11 +61,19 @@ export class AuthService {
 
         await this.productRepo.save(product);
 
-        user.totalPoints += productDto.points;
-
-        await this.userRepo.save(user);
+        await this.updateUserPoints(user.email);
 
         return product;
+    }
+
+    private async updateUserPoints(email: string) {
+        const user = await this.search.searchUserWithProducts(email);
+
+        if (!user) throw new ForbiddenException("Unauthorized user");
+
+        user.totalPoints = user.ownerProducts.reduce((sum, product) => sum + product.points, 0);
+
+        await this.userRepo.save(user);
     }
 
     async updateInterest(auth: string, id: number) {
