@@ -22,9 +22,16 @@ export class AppController {
     return this.auth.signin(signinDto);
   }
 
-  @Get('users')
+  @Get('user')
   async getUserByEmail(@Query('email') email: string) {
     const user = await this.search.searchUser(email);
+
+    return user || {};
+  }
+
+  @Get('user-products')
+  async getUserProductsByEmail(@Query('email') email: string) {
+    const user = await this.search.searchUserWithProducts(email);
 
     return user || {};
   }

@@ -1,5 +1,6 @@
 import { Category, Condition } from "src/types";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from ".";
 
 @Entity({ name: 'products' })
 export class Product {
@@ -29,4 +30,7 @@ export class Product {
 
     @Column()
     points: number;
+
+    @ManyToOne(() => User, ({ ownerProducts }) => ownerProducts)
+    owner: User;
 }

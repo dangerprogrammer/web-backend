@@ -1,5 +1,6 @@
 import { UserTrade } from "src/types";
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from ".";
 
 @Entity({ name: 'users' })
 export class User {
@@ -33,4 +34,11 @@ export class User {
 
     @Column({ default: 0 })
     totalPoints: number;
+
+    @OneToMany(() => Product, ({ owner }) => owner)
+    ownerProducts: Product[];
+
+    @ManyToMany(() => Product)
+    @JoinTable()
+    interestedProducts: Product[];
 }

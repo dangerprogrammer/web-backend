@@ -17,6 +17,15 @@ export class SearchService {
         return user;
     }
 
+    async searchUserWithProducts(email: string) {
+        const user = await this.userRepo.findOne({
+            where: { email },
+            relations: ['ownerProducts', 'interestedProducts']
+        });
+
+        return user;
+    }
+
     async searchAllProducts() {
         return await this.productRepo.find();
     }

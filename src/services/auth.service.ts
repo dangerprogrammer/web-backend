@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Product, User } from "src/entities";
 import * as bcrypt from 'bcrypt';
 import { SearchService } from "./search.service";
+import { productDto } from "src/types";
 
 @Injectable()
 export class AuthService {
@@ -47,12 +48,16 @@ export class AuthService {
         return tokens;
     }
 
-    async createProduct(auth: string, productDto: Partial<Product>) {
+    async createProduct(auth: string, productDto: productDto) {
         const user = await this.search.findUserByToken(auth);
 
         if (!user) throw new ForbiddenException("Unauthorized user");
 
-        const product = this.productRepo.create(productDto);
+        const product = this.productRepo.create({
+            ...productDto,
+            location: user.location,
+            owner: user
+        });
 
         await this.productRepo.save(product);
 
