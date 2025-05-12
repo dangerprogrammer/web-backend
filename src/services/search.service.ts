@@ -31,7 +31,10 @@ export class SearchService {
     }
 
     async searchProduct(id: number) {
-        return await this.productRepo.findOneBy({ id });
+        return await this.productRepo.findOne({
+            where: { id },
+            relations: ['owner', 'owner.ownerProducts']
+        });
     }
 
     async findUserByToken(auth: string) {
