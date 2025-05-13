@@ -4,6 +4,7 @@ import { Product } from './entities';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { SignUpDto } from './types';
 
 @Controller()
 export class AppController {
@@ -13,7 +14,7 @@ export class AppController {
   ) { }
 
   @Post('sign-up')
-  signUp(@Body() signupDto: { email: string, password: string }) {
+  signUp(@Body() signupDto: SignUpDto) {
     return this.auth.signup(signupDto);
   }
 

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Product, User } from "src/entities";
 import * as bcrypt from 'bcrypt';
 import { SearchService } from "./search.service";
-import { productDto } from "src/types";
+import { productDto, SignUpDto } from "src/types";
 
 @Injectable()
 export class AuthService {
@@ -16,14 +16,14 @@ export class AuthService {
         @Inject(forwardRef(() => SearchService)) private readonly search: SearchService
     ) { }
 
-    async signup(signupDto: { email: string, password: string }) {
+    async signup(signupDto: SignUpDto) {
         const hash = await this.hashData(signupDto.password);
 
         const createUser = this.userRepo.create({ ...signupDto, hash });
 
         await this.userRepo.save(createUser);
 
-        const user = (await this.userRepo.findOneBy({ email: createUser.email })) as User;
+        const user = (await this.userRepo.findOneBy({ email: createUser.email }))!;
         
         const tokens = await this.getTokens(user.id, user.email);
 
