@@ -1,5 +1,5 @@
 import { Category, Condition } from "src/types";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from ".";
 
 @Entity({ name: 'products' })
@@ -30,6 +30,9 @@ export class Product {
 
     @Column()
     points: number;
+
+    @CreateDateColumn()
+    createdAt: Date;
 
     @ManyToOne(() => User, ({ ownerProducts }) => ownerProducts)
     owner: User;
